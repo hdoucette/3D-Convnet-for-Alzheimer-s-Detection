@@ -31,20 +31,20 @@ def next_slice(ax):
     ax.index = (ax.index + 1) % (volume.shape[0])
     ax.images[0].set_array(volume[:, :, ax.index])
 
-data_dir='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/OAS30001_MR_d0129/anat3' #image directory
-img=nibabel.load(os.path.join(data_dir,'sub-OAS30001_ses-d0129_run-02_T1w.nii'))                         #loading the image
-img_data=img.get_data()                                                     #accessing image array
-multi_slice_viewer(img_data)
-plt.show()
-
-
-print(img_data.shape)
-
-# def show_slices(slices):
-#     """ Function to display row of image slices """
-#     fig, axes = plt.subplots(1, len(slices))
-#     for i, slice in enumerate(slices):
-#         axes[i].imshow(slice.T, cmap="gray", origin="lower")
-#
-# show_slices([img_data[120, :, :],img_data[:, 180, :],img_data[:, :, 180]])
+# data_dir='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/OAS30001_MR_d0129/anat3' #image directory
+# img=nibabel.load(os.path.join(data_dir,'sub-OAS30001_ses-d0129_run-02_T1w.nii'))                         #loading the image
+# img_data=img.get_data()                                                     #accessing image array
+# multi_slice_viewer(img_data)
 # plt.show()
+#
+#
+# print(img_data.shape)
+#
+# # def show_slices(slices):
+# #     """ Function to display row of image slices """
+# #     fig, axes = plt.subplots(1, len(slices))
+# #     for i, slice in enumerate(slices):
+# #         axes[i].imshow(slice.T, cmap="gray", origin="lower")
+# #
+# # show_slices([img_data[120, :, :],img_data[:, 180, :],img_data[:, :, 180]])
+# # plt.show()
