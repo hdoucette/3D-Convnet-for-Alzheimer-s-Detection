@@ -23,6 +23,6 @@ except:
     print(file + ' is not skull stripped')
 
 mybet = nipype.interfaces.fsl.BET(in_file=os.path.join(data_dir, file),
-                                      out_file=os.path.join(ssdata_dir, file + '_2.nii'), frac=0.2)  # frac=0.2
+                                      out_file=os.path.join(ssdata_dir, file + '_2.nii'), frac=0.5)  # frac=0.2
 mybet.run()  # executing the brain extraction
 print(file + ' is skull stripped')
