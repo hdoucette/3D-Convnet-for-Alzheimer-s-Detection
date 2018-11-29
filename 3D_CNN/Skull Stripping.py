@@ -3,8 +3,8 @@ import nipype
 import nipype.interfaces.fsl as fsl
 #import win32con
 
-data_dir='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/OAS30001_MR_d0129/anat3'                                                                                                                              #path to raw image directory
-ssdata_dir='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/OAS30001_MR_d0129/anat3_test'                                                                                                                           #path to skull stripped image directory
+data_dir='/home/ubuntu/OAS30001_MR_d0129/anat3'                                                                                                                              #path to raw image directory
+ssdata_dir='/home/ubuntu/OAS30001_MR_d0129/anat3_test'                                                                                                                           #path to skull stripped image directory
 
 # for file in os.listdir(data_dir):
 #     try:
