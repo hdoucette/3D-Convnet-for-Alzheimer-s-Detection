@@ -46,3 +46,4 @@ def skull_strip_single(img_path,dir):
     return
 
 skull_strip_all()
+
