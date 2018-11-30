@@ -2,15 +2,35 @@ import os
 import nipype
 import nipype.interfaces.fsl as fsl
 #import win32con
+from sys import platform
 
-data_dir='/home/ubuntu/OAS30001_MR_d0129/anat3'                                                                                                                              #path to raw image directory
-ssdata_dir='/home/ubuntu/OAS30001_MR_d0129/anat3_test'                                                                                                                           #path to skull stripped image directory
+if platform=='win32':
+    root='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/'
+else: root='/home/ubuntu'
 
-file='sub-OAS30001_ses-d0129_run-02_T1w.nii'
-try:
-    mybet = nipype.interfaces.fsl.BET(in_file=os.path.join(data_dir, file),
-                                      out_file=os.path.join(ssdata_dir, file + '_2.nii'), frac=0.2)  # frac=0.2
-    mybet.run()  # executing the brain extraction
-    print(file + ' is skull stripped')
-except:
-    print(file + ' is not skull stripped')
+file_path=os.path.join(root,'oasis-scripts/scans')
+for file in os.listdir(os.path.join(file_path)):
+    file_path_2=os.path.join(file_path,file)
+    for scan in os.listdir(file_path_2):
+        scan_path=os.path.join(file_path_2,scan)
+        for image in os.listdir(scan_path):
+            if image.endswith('nii.gz'):
+                iFile=os.path.join(scan_path,image)
+                try:
+                    mybet = nipype.interfaces.fsl.BET(in_file=iFile,
+                                                      out_file=os.path.join(scan_path,image + '_stripped.nii'),
+                                                      frac=0.5)
+                    mybet.run()  # executing the brain extraction
+                    print(file + ' is skull stripped')
+                except:
+                    print(file + ' is not skull stripped')
+
+
+
+
+
+
+
+
+
+
