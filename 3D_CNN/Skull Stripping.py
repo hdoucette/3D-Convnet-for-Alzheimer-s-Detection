@@ -11,11 +11,14 @@ else: root='/home/ubuntu'
 file_path=os.path.join(root,'oasis-scripts/scans')
 for file in os.listdir(os.path.join(file_path)):
     file_path_2=os.path.join(file_path,file)
+    #print(file)
     for scan in os.listdir(file_path_2):
         scan_path=os.path.join(file_path_2,scan)
+        #print(scan)
         for image in os.listdir(scan_path):
             if image.endswith('nii.gz'):
                 iFile=os.path.join(scan_path,image)
+                #print(iFile)
                 try:
                     mybet = nipype.interfaces.fsl.BET(in_file=iFile,
                                                       out_file=os.path.join(scan_path,image + '_stripped.nii'),
@@ -24,13 +27,3 @@ for file in os.listdir(os.path.join(file_path)):
                     print(file + ' is skull stripped')
                 except:
                     print(file + ' is not skull stripped')
-
-
-
-
-
-
-
-
-
-
