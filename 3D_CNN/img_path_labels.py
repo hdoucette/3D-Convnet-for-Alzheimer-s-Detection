@@ -12,7 +12,7 @@ if platform=='win32':
 else: root='/home/ubuntu'
 
 #Read Patient Data
-PD_Path=os.path.join(root,'oasis-scripts/Filtered_Data.csv')
+PD_Path=os.path.join(root,'oasis-scripts/Patient Data_Last.csv')
 df = pd.read_csv(PD_Path, index_col='Subject')
 
 #list = Image Path, Patient ID, and Diagnosis
