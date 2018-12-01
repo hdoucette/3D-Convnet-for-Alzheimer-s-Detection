@@ -4,73 +4,87 @@ import numpy as np
 import skimage
 from skimage import transform
 import nibabel
+from sys import platform
+import csv
+from Visualisation import *
+import matplotlib.pyplot as plt
+# from skimage.viewer import ImageViewer
 
-ssdata_dir='path_to_skull_stripped_images'
-aldata_dir='path_to_images_of_patients_with_alzheimers'
-nldata_dir='path_to_images_of_normal_control'
-mcidata_dir='path_to_images_of_patients_with_mild_cognitive_impairment'
-labels_df=pd.read_csv('path_to_dataset_datasheet',index_col=2)                          #indexed by the patient id
+def getdata(path,file):
+    file_path=os.path.join(path,file)
+    with open(file_path, 'r') as f:
+        reader = csv.reader(f)
+        data=list(reader)
+        return data
+
+if platform=='win32':
+   root='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/'
+else: root='/home/ubuntu'
+
+#Read Patient Data
+PD_Path=os.path.join(root,'oasis-scripts')
+train_list=getdata(PD_Path,'train_data.csv')
+test_list=getdata(PD_Path,'test_data.csv')
+
+
+label_path=os.path.join(PD_Path,'train_data.csv')
+labels_df=pd.read_csv(label_path,names=['path','patient_ID','diagnosis'])
 
 #labeling and object formation
+for list in [train_list,test_list]:
+    for file in list:
+        path=file[0]
+        label=file[2]
+        netdata=[]                                              #will be used for numpy object
+        try:
+            img = nibabel.load(path)  # loading the image
+            img = img.get_data()
+            img = skimage.transform.resize(img, (176, 256, 256), mode='constant')
 
-for file in os.listdir(ssdata_dir):
-    netdata=[]                                              #will be used for numpy object
-    try:
-        img = nibabel.load(os.path.join(ssdata_dir, file))  # loading the image
-        img = img.get_data()                           # accessing image array
-        img = skimage.transform.resize(img, (106, 106, 120))#resizing the image to dimensions(106,106,120)
-        id = file.partition('.')                            #accessing patient id numbers
-        id = id[0].partition('_2')[0]
-        label=labels_df.get_value(id[0], 'Screen.Diagnosis') #getting the label
-        if np.unique(label == 'NL'):
-            labelar = np.array([1, 0, 0])
-            netdata.append([img, labelar])                          #one hot encoding and saving numpy object
-            np.save(os.path.join(nldata_dir, id[0] + id[1]), netdata)
-        elif np.unique(label == 'AD'):
-            labelar = np.array([0, 1, 0])
-            netdata.append([img, labelar])
-            np.save(os.path.join(aldata_dir, id[0] + id[1]), netdata)
-        elif np.unique(label == 'MCI'):
-            labelar = np.array([0, 0, 1])
-            netdata.append([img, labelar])
-            np.save(os.path.join(mcidata_dir, id[0] + id[1]), netdata)
-    except:
-        continue
+            if int(float(label)) == 0:
+                labelar = np.array([1, 0, 0])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
 
-#normalisation
+            elif int(float(label)) >=2:
+                labelar = np.array([0, 1, 0])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
 
-totalnum=[]         #total number of pixels in the image
-mean=[]             #mean of the pixels in the image
-nummax=[]           #maximum value of pixels in the image
-for file in os.listdir(aldata_dir):
-    img = np.load(os.path.join(aldata_dir,file))
-    mean.append(np.mean(img[0][0]))
-    totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
-    nummax.append(np.max(img[0][0]))
-for file in os.listdir(nldata_dir):
-    img = np.load(os.path.join(nldata_dir, file))
-    mean.append(np.mean(img[0][0]))
-    totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
-    nummax.append(np.max(img[0][0]))
-for file in os.listdir(mcidata_dir):
-    img = np.load(os.path.join(mcidata_dir, file))
-    mean.append(np.mean(img[0][0]))
-    totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
-    nummax.append(np.max(img[0][0]))
-nummean=np.vdot(mean,totalnum)/np.sum(totalnum)           #mean value for the full dataset
-nummax=np.max(nummax)                                     #max value for the full dataset
+            else:
+                labelar = np.array([0, 0, 1])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
+        except:
+            continue
 
-for file in os.listdir(aldata_dir):
-    img = np.load(os.path.join(aldata_dir,file))
-    img[0][0]=(img[0][0]-nummean)/nummax                 #normalisation(x-mean/max value)
-    np.save(os.path.join(aldata_dir,file),img)
-for file in os.listdir(nldata_dir):
-    img = np.load(os.path.join(nldata_dir, file))
-    img[0][0] =(img[0][0] - nummean) / nummax
-    np.save(os.path.join(nldata_dir,file),img)
-for file in os.listdir(mcidata_dir):
-    img = np.load(os.path.join(mcidata_dir, file))
-    img[0][0] =(img[0][0] - nummean) / nummax
-    np.save(os.path.join(mcidata_dir, file),img)
+#normalization
+totalnum=[] #total number of pixels in the image
+mean=[]  #mean of the pixels in the image
+nummax=[]  #maximum value of pixels in the image
+for list in [train_list,test_list]:
+    for file in train_list:
+        file_name=file[0]+'.npy'
+        img = np.load(file_name)
+        mean.append(np.mean(img[0][0]))
+        totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
+        nummax.append(np.max(img[0][0]))
+
+nummean=np.vdot(mean,totalnum)/np.sum(totalnum)
+nummax=np.max(nummax)
+print(nummax,nummean)
+
+for list in [train_list,test_list]:
+    for file in train_list:
+        file_name=file[0]+'.npy'
+        img = np.load(file_name)
+        img[0][0]=(img[0][0]-nummean)/nummax #normalisation(x-mean/max value)
+
+# #Test Image Output
+# img_data=img[0][0]
+# multi_slice_viewer(img_data)
+# plt.show()
+# np.save(file_name,img)
+
 
 
