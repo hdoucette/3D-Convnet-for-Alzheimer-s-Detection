@@ -76,15 +76,18 @@ print(nummax,nummean)
 
 for list in [train_list,test_list]:
     for file in train_list:
-        file_name=file[0]+'.npy'
-        img = np.load(file_name)
-        img[0][0]=(img[0][0]-nummean)/nummax #normalisation(x-mean/max value)
+        try:
+            file_name=file[0]+'.npy'
+            img = np.load(file_name)
+            img[0][0]=(img[0][0]-nummean)/nummax #normalisation(x-mean/max value)
+        except:
+            continue
 
 # #Test Image Output
-# img_data=img[0][0]
+img_data=img[0][0]
 # multi_slice_viewer(img_data)
 # plt.show()
-# np.save(file_name,img)
+np.save(file_name,img)
 
 
 
