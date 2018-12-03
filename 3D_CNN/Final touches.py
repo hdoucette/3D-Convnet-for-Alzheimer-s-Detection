@@ -65,10 +65,13 @@ nummax=[]  #maximum value of pixels in the image
 for list in [train_list,test_list]:
     for file in train_list:
         file_name=file[0]+'.npy'
-        img = np.load(file_name)
-        mean.append(np.mean(img[0][0]))
-        totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
-        nummax.append(np.max(img[0][0]))
+        try:
+            img = np.load(file_name)
+            mean.append(np.mean(img[0][0]))
+            totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
+            nummax.append(np.max(img[0][0]))
+        except:
+            continue
 
 nummean=np.vdot(mean,totalnum)/np.sum(totalnum)
 nummax=np.max(nummax)
