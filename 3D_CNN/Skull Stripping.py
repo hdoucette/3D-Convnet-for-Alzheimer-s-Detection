@@ -1,22 +1,26 @@
 import os
 import nipype
 import nipype.interfaces.fsl as fsl
-#import win32con
+import csv
 from sys import platform
 
 def skull_strip_all():
-
     if platform=='win32':
         root='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/'
     else: root='/home/ubuntu'
+    csv_path=os.path.join(root,"Skull Stripped Scans.csv")
 
+    stripped_scans=[]
+    with open(csv_path, 'r') as f:
+        reader = csv.reader(f)
+        stripped_scans=list(reader)
     file_path=os.path.join(root,'oasis-scripts/scans')
     for file in os.listdir(os.path.join(file_path)):
         file_path_2=os.path.join(file_path,file)
         for scan in os.listdir(file_path_2):
             scan_path=os.path.join(file_path_2,scan)
             for image in os.listdir(scan_path):
-                if image.endswith('w.nii.gz'):
+                if image.endswith('w.nii.gz') and [file] not in stripped_scans:
                     iFile=os.path.join(scan_path,image)
                     try:
                         mybet = nipype.interfaces.fsl.BET(in_file=iFile,
