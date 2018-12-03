@@ -25,38 +25,38 @@ else: root='/home/ubuntu'
 PD_Path=os.path.join(root,'oasis-scripts')
 train_list=getdata(PD_Path,'train_data.csv')
 test_list=getdata(PD_Path,'test_data.csv')
-
+denom=len(train_list)+len(test_list)
 
 label_path=os.path.join(PD_Path,'train_data.csv')
 labels_df=pd.read_csv(label_path,names=['path','patient_ID','diagnosis'])
 
 #labeling and object formation
+num=0
 for list in [train_list,test_list]:
     for file in list:
         path=file[0]
         label=file[2]
         netdata=[] #will be used for numpy object
-        img = nibabel.load(path)  # loading the image
-        #img=nibabel.load('C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/oasis-scripts/scans\OAS30345_MR_d0087/anat2\sub-OAS30345_ses-d0087_run-01_T1w.nii.gz')
         try:
             img = nibabel.load(path)  # loading the image
             img = img.get_data()
-            img = skimage.transform.resize(img.astype(int), (176, 256, 256), mode='constant')
+            #img = skimage.transform.resize(img, (176, 256, 256), mode='constant')
+            num=num+1
             if int(float(label)) == 0:
                 labelar = np.array([1, 0, 0])
                 netdata.append([img, labelar])
                 np.save(path, netdata)
-                print(path," is saved as npy")
+                print(num, 'of',denom," is npy saved")
             elif int(float(label)) >=2:
                 labelar = np.array([0, 1, 0])
                 netdata.append([img, labelar])
                 np.save(path, netdata)
-                print(path, " is saved as npy")
+                print(num, 'of',denom," is npy saved")
             else:
                 labelar = np.array([0, 0, 1])
                 netdata.append([img, labelar])
                 np.save(path, netdata)
-                print(path, " is saved as npy")
+                print(num, 'of',denom," is npy saved")
         except:
             continue
 
@@ -72,7 +72,7 @@ for list in [train_list,test_list]:
             mean.append(np.mean(img[0][0]))
             totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
             nummax.append(np.max(img[0][0]))
-            print(file_name, " is added to mean and max")
+            #print(np.max(img[0][0]))
         except:
             continue
 
@@ -81,20 +81,27 @@ nummean=np.vdot(mean,totalnum)/np.sum(totalnum)
 nummax=np.max(nummax)
 print(nummax,nummean)
 
+num=0
 for list in [train_list,test_list]:
-    for file in train_list:
+    for file in list:
         try:
             file_name=file[0]+'.npy'
             img = np.load(file_name)
             img[0][0]=(img[0][0]-nummean)/nummax #normalisation(x-mean/max value)
+            num+=1
+            print(num,' of',denom, ' is normalized')
+            np.save(file_name, img)
         except:
             continue
 
+
 # #Test Image Output
-img_data=img[0][0]
+# img = np.load(file)
+# img_data=img[0][0]
+# print(img_data[100][100])
 # multi_slice_viewer(img_data)
 # plt.show()
-np.save(file_name,img)
+
 
 
 
