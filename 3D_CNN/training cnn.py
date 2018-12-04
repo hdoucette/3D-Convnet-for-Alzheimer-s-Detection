@@ -26,16 +26,22 @@ datanp=[]                               #images
 truenp=[]                               #labels
 
 count=0
+denom=len(train_data)
 for row in train_data:
-    data=np.load(row[0]+'.npz')
-    data=data['data']
-    img=data[0][0]
-    print(img.shape)
-    if img.shape==(176, 256, 256):
-        datanp.append(img)
-        truenp.append(data[0][1])
-    else: count=count+1
-    print(count)
+    try:
+        data=np.load(row[0]+'.npz')
+        data=data['data']
+        img=data[0][0]
+        if img.shape==(176, 256, 256):
+            datanp.append(img)
+            truenp.append(data[0][1])
+        else:
+            count=count+1
+            print(count," of",denom," eliminated from set")
+    except:
+        print(row[0],"not loaded")
+        count = count + 1
+        print(count, " of", denom, " eliminated from set")
 datanp=np.array(datanp)
 truenp=np.array(truenp)
 sh=datanp.shape
