@@ -26,7 +26,7 @@ for file in os.listdir(os.path.join(file_path)):
         scan_path=os.path.join(file_path_2,scan)
         for image in os.listdir(scan_path):
             if image.endswith('_stripped.nii.gz'):
-                image_paths.append([os.path.join(scan_path,image),patientID,diagnosis])
+                image_paths.append([os.path.join(scan_path,image),diagnosis])
 
 train, test = train_test_split(image_paths, test_size=0.2)
 
