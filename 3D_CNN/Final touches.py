@@ -43,13 +43,20 @@ for list in [train_list,test_list]:
             labelar = np.array([0, 0, 1])
         else:
             labelar = np.array([0, 0, 1])
-        netdata=[] #will be used for numpy object
+
+        # will be used for numpy object
+        netdata=[]
         try:
-            img = nibabel.load(path)  # loading the image
+            #load image
+            img = nibabel.load(path)
             img = img.get_data()
-            #img = skimage.transform.resize(img, (176, 256, 256), mode='constant')
+            #reshape image to standard shape
+            if img.shape != (176, 256, 256): print(path)
+            #img = skimage.transform.resize(img.astype(int), (176, 256, 256), mode='constant')
             num=num+1
+            #append image and label to netdata
             netdata.append([img, labelar])
+            #save as compressed numpy array with array name = 'data'
             np.savez_compressed(path, data=netdata)
             print(num, 'of',denom," is npz saved")
         except:
@@ -57,17 +64,20 @@ for list in [train_list,test_list]:
 
 #normalization
 num=0
-totalnum=[] #total number of pixels in the image
-mean=[]  #mean of the pixels in the image
-nummax=[]  #maximum value of pixels in the image
+#total number of pixels in the image
+totalnum=[]
+#mean of the pixels in the image
+mean=[]
+#maximum value of pixels in the image
+nummax=[]
 num=0
 for list in [train_list,test_list]:
     for file in list:
         file_name=file[0]+'.npz'
         try:
             img = np.load(file_name)
+            #obtain array out of compressed file
             img = img['data']
-            print(img[0][0].shape)
             average=np.mean(img[0][0])
             max=np.max(img[0][0])
             size=img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]
@@ -79,7 +89,7 @@ for list in [train_list,test_list]:
         except:
             print(file_name," could not be included in mean and max calculations")
 
-print(len(mean), len(totalnum))
+
 nummean=np.vdot(mean,totalnum)/np.sum(totalnum)
 nummax=np.max(nummax)
 print('NUMMAX:',nummax,' NUMMEAN:',nummean)
@@ -88,9 +98,11 @@ num=0
 for list in [train_list,test_list]:
     for file in list:
         try:
+            #load compressed array
             file_name=file[0]+'.npz'
             img = np.load(file_name)
             img = img['data']
+            #normalize by mean and max
             img[0][0]=(img[0][0]-nummean)/nummax #normalisation(x-mean/max value)
             num+=1
             print(num,' of',denom, ' is normalized')
@@ -99,7 +111,9 @@ for list in [train_list,test_list]:
             print(file[0],' could not be normalized')
 
 
-#Test Image Output
+# #Test Image Output
+# file_name='C:/Users\douce\Desktop\MIT Fall 2018/6.869 Machine Vision\Final Project\oasis-scripts\scans\OAS30774_MR_d0573/anat3'
+# file_name=file_name+'.npz'
 # img = np.load(file_name)
 # img = img['data']
 # img_data=img[0][0]
