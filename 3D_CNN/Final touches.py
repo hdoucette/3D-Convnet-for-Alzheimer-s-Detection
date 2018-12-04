@@ -8,7 +8,6 @@ from sys import platform
 import csv
 from Visualisation import *
 import matplotlib.pyplot as plt
-import torch
 
 # from skimage.viewer import ImageViewer
 
