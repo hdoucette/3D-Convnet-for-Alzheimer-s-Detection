@@ -40,8 +40,8 @@ for row in train_data:
             print(count," of",denom," eliminated from set")
     except:
         print(row[0],"not loaded")
-        count = count + 1
-        print(count, " of", denom, " eliminated from set")
+        count = count+1
+        print('exception ',count, " of", denom, " eliminated from set")
 datanp=np.array(datanp)
 truenp=np.array(truenp)
 sh=datanp.shape
