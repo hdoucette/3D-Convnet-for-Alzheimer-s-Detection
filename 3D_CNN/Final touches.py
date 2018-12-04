@@ -27,39 +27,39 @@ PD_Path=os.path.join(root,'oasis-scripts')
 train_list=getdata(PD_Path,'train_data.csv')
 test_list=getdata(PD_Path,'test_data.csv')
 denom=len(train_list)+len(test_list)
-#
-# label_path=os.path.join(PD_Path,'train_data.csv')
-# labels_df=pd.read_csv(label_path,names=['path','patient_ID','diagnosis'])
-#
-# #labeling and object formation
-# num=0
-# for list in [train_list,test_list]:
-#     for file in list:
-#         path=file[0]
-#         label=file[2]
-#         netdata=[] #will be used for numpy object
-#         try:
-#             img = nibabel.load(path)  # loading the image
-#             img = img.get_data()
-#             #img = skimage.transform.resize(img, (176, 256, 256), mode='constant')
-#             num=num+1
-#             if int(float(label)) == 0:
-#                 labelar = np.array([1, 0, 0])
-#                 netdata.append([img, labelar])
-#                 np.save(path, netdata)
-#                 print(num, 'of',denom," is npy saved")
-#             elif int(float(label)) >=2:
-#                 labelar = np.array([0, 1, 0])
-#                 netdata.append([img, labelar])
-#                 np.save(path, netdata)
-#                 print(num, 'of',denom," is npy saved")
-#             else:
-#                 labelar = np.array([0, 0, 1])
-#                 netdata.append([img, labelar])
-#                 np.save(path, netdata)
-#                 print(num, 'of',denom," is npy saved")
-#         except:
-#             continue
+
+label_path=os.path.join(PD_Path,'train_data.csv')
+labels_df=pd.read_csv(label_path,names=['path','patient_ID','diagnosis'])
+
+#labeling and object formation
+num=0
+for list in [train_list,test_list]:
+    for file in list:
+        path=file[0]
+        label=file[2]
+        netdata=[] #will be used for numpy object
+        try:
+            img = nibabel.load(path)  # loading the image
+            img = img.get_data()
+            #img = skimage.transform.resize(img.astype(int), (176, 256, 256), mode='constant')
+            num=num+1
+            if int(float(label)) == 0:
+                labelar = np.array([1, 0, 0])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
+                print(num, 'of',denom," is npy saved")
+            elif int(float(label)) >=2:
+                labelar = np.array([0, 1, 0])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
+                print(num, 'of',denom," is npy saved")
+            else:
+                labelar = np.array([0, 0, 1])
+                netdata.append([img, labelar])
+                np.save(path, netdata)
+                print(num, 'of',denom," is npy saved")
+        except:
+            print(path,' could not be appended and saved as numpy array')
 
 #normalization
 num=0
@@ -81,7 +81,7 @@ for list in [train_list,test_list]:
             num=num+1
             print(num," of",denom," appended to mean and max")
         except:
-            continue
+            print(file_name," could not be included in mean and max calculations")
 
 print(len(mean), len(totalnum))
 nummean=np.vdot(mean,totalnum)/np.sum(totalnum)
@@ -99,15 +99,15 @@ for list in [train_list,test_list]:
             print(num,' of',denom, ' is normalized')
             np.save(file_name, img)
         except:
-            continue
+            print(file[0],' could not be normalized')
 
 
 #Test Image Output
-img = np.load(file_name)
-img_data=img[0][0]
-# print(img_data[100][100])
-multi_slice_viewer(img_data)
-plt.show()
+# img = np.load(file_name)
+# img_data=img[0][0]
+# # print(img_data[100][100])
+# multi_slice_viewer(img_data)
+# plt.show()
 
 
 
