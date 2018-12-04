@@ -32,9 +32,21 @@ def next_slice(ax):
     ax.images[0].set_array(volume[:, :, ax.index])
 
 
-# data_dir='C:/Users\douce\Desktop\MIT Fall 2018/6.869 Machine Vision\Final Project\oasis-scripts\scans\OAS30011_MR_d0055/anat2' #image directory
-# img=nibabel.load(os.path.join(data_dir,'sub-OAS30011_ses-d0055_T1w_stripped.nii.gz'))
-#
+# # Visualize .nii.gz file
+# data_dir='C:/Users\douce\Desktop\MIT Fall 2018/6.869 Machine Vision\Final Project\oasis-scripts\scans\/OAS30020_MR_d0092/anat4' #image directory
+# img=nibabel.load(os.path.join(data_dir,'t.nii.gz'))
 # img_data=img.get_data()
+# multi_slice_viewer(img_data)
+# plt.show()
+
+#Visualize numpy compressed file
+# import numpy as np
+# root='C:/Users\douce\Desktop\MIT Fall 2018/6.869 Machine Vision\Final Project\oasis-scripts\scans'
+# file_name=root+'/OAS30020_MR_d0092/anat4'
+# file_name=file_name+'/sub-OAS30020_ses-d0092_run-02_T1w_stripped.nii.gz'
+# img = np.load(file_name)
+# img = img['data']
+# img_data=img[0][0]
+# print(img[0][1])
 # multi_slice_viewer(img_data)
 # plt.show()
