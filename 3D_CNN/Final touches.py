@@ -41,7 +41,7 @@ for list in [train_list,test_list]:
         try:
             img = nibabel.load(path)  # loading the image
             img = img.get_data()
-            #img = skimage.transform.resize(img.astype(int), (176, 256, 256), mode='constant')
+            #img = skimage.transform.resize(img, (176, 256, 256), mode='constant')
             num=num+1
             if int(float(label)) == 0:
                 labelar = np.array([1, 0, 0])
