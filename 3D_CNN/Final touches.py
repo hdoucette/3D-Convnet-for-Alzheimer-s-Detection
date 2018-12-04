@@ -72,9 +72,12 @@ for list in [train_list,test_list]:
         file_name=file[0]+'.npy'
         try:
             img = np.load(file_name)
-            mean.append(np.mean(img[0][0]))
-            totalnum.append((img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]))
-            nummax.append(np.max(img[0][0]))
+            average=np.mean(img[0][0])
+            max=np.max(img[0][0])
+            size=img[0][0].shape[0]*img[0][0].shape[1]*img[0][0].shape[2]
+            mean.append(average)
+            totalnum.append(size)
+            nummax.append(max)
             num=num+1
             print(num," of",denom," appended to mean and max")
         except:
