@@ -32,8 +32,8 @@ def next_slice(ax):
     ax.images[0].set_array(volume[:, :, ax.index])
 
 
-# data_dir='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/oasis-scripts/scans/OAS30345_MR_d0087/anat2' #image directory
-# img=nibabel.load(os.path.join(data_dir,'sub-OAS30345_ses-d0087_run-01_T1w_stripped.nii.gz'))
+# data_dir='C:/Users\douce\Desktop\MIT Fall 2018/6.869 Machine Vision\Final Project\oasis-scripts\scans\OAS30011_MR_d0055/anat2' #image directory
+# img=nibabel.load(os.path.join(data_dir,'sub-OAS30011_ses-d0055_T1w_stripped.nii.gz'))
 #
 # img_data=img.get_data()
 # multi_slice_viewer(img_data)
