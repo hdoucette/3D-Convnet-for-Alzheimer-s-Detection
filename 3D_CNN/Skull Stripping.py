@@ -9,12 +9,7 @@ def skull_strip_all():
     if platform=='win32':
         root='C:/Users/douce/Desktop/MIT Fall 2018/6.869 Machine Vision/Final Project/'
     else: root='/home/ubuntu'
-    csv_path=os.path.join(root,"Skull Stripped Scans.csv")
 
-    stripped_scans=[]
-    with open(csv_path, 'r') as f:
-        reader = csv.reader(f)
-        stripped_scans=list(reader)
     file_path=os.path.join(root,'oasis-scripts/scans')
     for file in os.listdir(os.path.join(file_path)):
         file_path_2=os.path.join(file_path,file)
@@ -32,6 +27,7 @@ def skull_strip_all():
                             mybet = nipype.interfaces.fsl.BET(in_file=iFile,
                                                       out_file=os.path.join(scan_path,image + '_stripped.nii.gz'),
                                                       frac=0.30)
+
                             mybet.run()  # executing the brain extraction
                             print(file + ' is skull stripped')
                         except:
